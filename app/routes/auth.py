@@ -26,3 +26,17 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 
     return {"message": "Usuário criado com sucesso"}
 
+@router.post("/login")
+def login(user:UserLogin, db:Session=Depends(get_db)):
+    db_user = db.query(User).filter(User.email == user.email)
+
+    if not db_user or not verify_password(user.password, db_user.password):
+        raise HTTPException(status_code=401, detail="Credenciais inválidas")
+
+    access_token = create_acess_token(data={"sub": str(db_user.id)},
+        expires_delta=timedelta(minutes=ACCES_TOKEN_EXPIE_MINUTES))
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
