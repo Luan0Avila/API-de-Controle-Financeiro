@@ -2,7 +2,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from jose import jwt, JWTError
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2AuthorizationCodeBearer
+from fastapi.security import OAuth2PasswordBearer
 from app.core.config import SECRET_KEY, ALGORITHM
 from sqlalchemy.orm import Session
 from app.database.session import get_db
@@ -24,7 +24,7 @@ def create_acess_token(data:dict, expires_delta: timedelta):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
-oauth2_scheme = OAuth2AuthorizationCodeBearer(tokenUrl="/auth/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 def get_current_user(
         token: str = Depends(oauth2_scheme),
