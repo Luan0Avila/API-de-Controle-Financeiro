@@ -16,7 +16,7 @@ def create_transaction(
     current_user: User= Depends(get_current_user)):
     new_transaction = Transaction(
         description=transacition.description, value=transacition.value,
-        type=transacition.type, user_id=1 #temporario
+        type=transacition.type, user_id=current_user.id #temporario
     )
 
     db.add(new_transaction)

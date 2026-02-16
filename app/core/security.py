@@ -40,7 +40,7 @@ def get_current_user(
     except JWTError:
         raise HTTPException(status_code=401)
     
-    user = db.query(User).filter(User.id == int(user_id).first)
+    user = db.query(User).filter(User.id == int(user_id)).first()
 
     if not user:
         raise HTTPException(status_code=401)
