@@ -2,14 +2,15 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database.session import get_db
 from app.models.transaction import Transaction
-from app.schemas.transaction import TransactionCreate
+from app.schemas.transaction import TransactionCreate, TransactionResponse
 from app.core.security import get_current_user
 from app.models.user import User
+from typing import List
 
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
-@router.post("/")
+@router.post("/", response_model=TransactionResponse)
 def create_transaction(
     transacition: TransactionCreate,
     db: Session = Depends(get_db),
@@ -25,6 +26,11 @@ def create_transaction(
     
     return new_transaction
 
-@router.get("/")
-def list_transactions(db: Session=Depends(get_db)):
-    return db.query(Transaction).all()
+@router.get("/", response_model=List[TransactionResponse])
+def list_transactions(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)):
+
+    return db.query(Transaction).filter(
+        Transaction.user_id == current_user.id
+    ).all()
