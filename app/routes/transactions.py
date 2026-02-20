@@ -2,11 +2,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from app.database.session import get_db
 from app.models.transaction import Transaction
-from app.schemas.transaction import TransactionCreate, TransactionResponse
+from app.schemas.transaction import TransactionCreate, TransactionResponse, FinancialSummary
 from app.core.security import get_current_user
 from app.models.user import User
 from typing import List
-
+from app.services.finance import calculate_summary
 
 router = APIRouter(prefix="/transactions", tags=["Transactions"])
 
@@ -34,3 +34,11 @@ def list_transactions(
     return db.query(Transaction).filter(
         Transaction.user_id == current_user.id
     ).all()
+
+@router.get(
+    "/summary", response_model=FinancialSummary)
+def get_summary(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    return calculate_summary(db, current_user.id)
