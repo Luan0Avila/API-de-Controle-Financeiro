@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
 from app.database.base import Base
 from datetime import date
+from sqlalchemy.orm import relationship
 
 class Transaction(Base):
     __tablename__= "transactions"
@@ -12,3 +13,5 @@ class Transaction(Base):
     type = Column(String)
     date = Column(Date, default=date.today)
     user_id = Column(Integer, ForeignKey("users.id"))
+    category_id = Column(Integer, ForeignKey("category.id"))
+    

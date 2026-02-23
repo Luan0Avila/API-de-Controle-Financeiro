@@ -7,6 +7,7 @@ class TransactionCreate(BaseModel):
     value: float
     type: Literal["income", "expense"]
     date: date
+    category_id: int
 
 class TransactionResponse(BaseModel):
     id: int
@@ -15,7 +16,8 @@ class TransactionResponse(BaseModel):
     type: str
     date: date
     user_id: int
-
+    category_id: int
+    
     class Config:
         from_attributes = True
 
