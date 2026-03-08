@@ -34,8 +34,11 @@ def create_transaction(
 
 @router.get("/", response_model=List[TransactionResponse])
 def list_transactions(
+    limit: int = 10,
+    offset: int = 0,
     month: Optional[int] = None,
     year: Optional[int] = None,
+    category_id: Optional[int] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)):
 
@@ -49,7 +52,16 @@ def list_transactions(
             extract("year", Transaction.date) == year
         )
 
-    return query.all()
+    if category_id:
+        query = query.filter(
+            Transaction.category_id == category_id
+        )
+
+    query = query.order_by(Transaction.date.desc())
+
+    transactions = query.offset(offset).limit(limit).all()
+
+    return transactions
 
 @router.get(
     "/summary", response_model=FinancialSummary)
