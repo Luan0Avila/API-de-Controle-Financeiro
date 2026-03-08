@@ -7,8 +7,6 @@ from app.routes import transactions, auth, category
 
 app = FastAPI(title="Controle Financeiro API")
 
-Base.metadata.create_all(bind=engine)
-
 @app.get("/")
 def home():
     return {"status":"ok"}

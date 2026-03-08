@@ -13,5 +13,6 @@ class Transaction(Base):
     type = Column(String)
     date = Column(Date, default=date.today)
     user_id = Column(Integer, ForeignKey("users.id"))
-    category_id = Column(Integer, ForeignKey("category.id"))
+    category_id = Column(Integer, ForeignKey("categories.id"))
     
+    transactions = relationship("Transaction", backref="category")
