@@ -15,4 +15,4 @@ class Transaction(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     category_id = Column(Integer, ForeignKey("categories.id"))
     
-    transactions = relationship("Transaction", backref="category")
+    transactions = relationship("Category", backref="transaction")
