@@ -46,7 +46,7 @@ def list_transactions(
         Transaction.user_id == current_user.id
     )
 
-    if month & year:
+    if month and year:
         query = query.filter(
             extract("month", Transaction.date) == month,
             extract("year", Transaction.date) == year
