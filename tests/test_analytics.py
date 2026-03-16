@@ -1,3 +1,5 @@
+from conftest import get_token
+
 def test_income_vs_expense(test_client):
 
     token = get_token(test_client)
