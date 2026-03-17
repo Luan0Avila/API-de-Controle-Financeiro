@@ -3,29 +3,30 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-client = TestClient(app)
+@pytest.fixture
+def client():
+    return TestClient(app)
+
 
 @pytest.fixture
-def test_client():
-    return client
-
-
-def get_token(client):
+def user_token(client):
+    email = "user@test.com"
+    password = "123456"
 
     client.post(
         "/auth/register",
         json={
-                "email": "user@text.com",
-                "password": "123456"
+            "email": email,
+            "password": password
         }
     )
 
     response = client.post(
         "/auth/login",
         json={
-            "email": "user@test.com",
-            "password": "123456"
+            "email": email,
+            "password": password
         }
     )
-    
+
     return response.json()["access_token"]
